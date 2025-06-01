@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tap Cruise</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div id="gameOverModal" class="modal">
+      <div class="modal-content">
+        <h2>Game Over!</h2>
+        <p>Your score: <span id="finalScore"></span></p>
+        <button id="restartBtn">Play Again</button>
+      </div>
+    </div>
+
+    <div class="game-container">
+      <h1>Tap Cruise</h1>
+      <div class="scoreboard">
+        <div>Score: <span id="score">0</span></div>
+        <div>😎High Score: <span id="highScore">0</span></div>
+      </div>
+      <div class="grid" id="grid"></div>
+      <button id="startBtn">Start Game</button>
+      <p class="note">Tap the flashing tile before it disappears!</p>
+    </div>
+    <audio id="bgMusic" preload="auto" loop></audio>
+    <audio
+      id="failSound"
+      src="./sounds/Adult-Laugh.mp3"
+      preload="auto"
+    ></audio>
+    <script src="script.js"></script>
+  </body>
+</html>
