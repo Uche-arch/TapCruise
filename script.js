@@ -52,18 +52,19 @@ function startGame() {
   clearInterval(intervalId);
   intervalId = setInterval(flashRandomTile, speed);
 
-  // Pick a random Nigerian song and set it as source
+  // Set and play a random background song
   const randomIndex = Math.floor(Math.random() * bgSongs.length);
   bgMusic.src = bgSongs[randomIndex];
   bgMusic.load();
+  bgMusic.play().catch((err) => {
+    console.warn("Music autoplay blocked:", err);
+  });
 
+  // Reset fail sound
   failSound.pause();
   failSound.currentTime = 0;
-
-  bgMusic.play().catch(() => {
-    // Autoplay might be blocked by browser, handle if needed
-  });
 }
+  
 
 function flashRandomTile() {
   if (activeTile !== null) {
