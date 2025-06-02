@@ -15,8 +15,8 @@ let activeTile = null;
 let score = 0;
 let highScore = localStorage.getItem("tileTapHighScore") || 0;
 
-const INITIAL_SPEED = 1800; // Start slow (1.8 seconds)
-const MIN_SPEED = 400; // Minimum speed (fastest)
+const INITIAL_SPEED = 1300; // Start slow (1.8 seconds)
+const MIN_SPEED = 100; // Minimum speed (fastest)
 let speed = INITIAL_SPEED;
 let intervalId = null;
 
