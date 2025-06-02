@@ -6,7 +6,6 @@ const gameOverModal = document.getElementById("gameOverModal");
 const finalScoreEl = document.getElementById("finalScore");
 const restartBtn = document.getElementById("restartBtn");
 
-
 const bgMusic = document.getElementById("bgMusic");
 const failSound = document.getElementById("failSound");
 
@@ -15,14 +14,16 @@ let activeTile = null;
 let score = 0;
 let highScore = localStorage.getItem("tileTapHighScore") || 0;
 
-const INITIAL_SPEED = 1300; // Start slow (1.8 seconds)
-const MIN_SPEED = 100; // Minimum speed (fastest)
+const INITIAL_SPEED = 1300; // (You can adjust or remove speed now)
+const MIN_SPEED = 100;
 let speed = INITIAL_SPEED;
-let intervalId = null;
+
+let flashTimeoutId = null;
 
 const bgSongs = [
   "./sounds/WITHYOU.mp3",
   "./sounds/Francis.mp3",
+  "./sounds/fairy.mp3",
   // add your Nigerian songs URLs here
 ];
 
@@ -49,10 +50,10 @@ function startGame() {
 
   createGrid();
 
-  clearInterval(intervalId);
-  intervalId = setInterval(flashRandomTile, speed);
+  clearTimeout(flashTimeoutId);
 
-  // Set and play a random background song
+  flashRandomTile();
+
   const randomIndex = Math.floor(Math.random() * bgSongs.length);
   bgMusic.src = bgSongs[randomIndex];
   bgMusic.load();
@@ -60,11 +61,9 @@ function startGame() {
     console.warn("Music autoplay blocked:", err);
   });
 
-  // Reset fail sound
   failSound.pause();
   failSound.currentTime = 0;
 }
-  
 
 function flashRandomTile() {
   if (activeTile !== null) {
@@ -76,18 +75,22 @@ function flashRandomTile() {
   activeTile = tiles[index];
   activeTile.classList.add("active");
 
-  setTimeout(() => {
+  flashTimeoutId = setTimeout(() => {
     if (activeTile) {
       activeTile.classList.remove("active");
       activeTile = null;
+      endGame();
     }
-  }, speed - 100);
+  }, 1000); // 1 seconds
 }
 
 function handleTileClick(index) {
   if (tiles[index] === activeTile) {
+    clearTimeout(flashTimeoutId);
+
     activeTile.classList.remove("active");
     activeTile = null;
+
     score++;
     scoreEl.textContent = score;
 
@@ -102,15 +105,14 @@ function handleTileClick(index) {
       if (speed < MIN_SPEED) speed = MIN_SPEED;
     }
 
-    clearInterval(intervalId);
-    intervalId = setInterval(flashRandomTile, speed);
+    flashRandomTile();
   } else {
     endGame();
   }
 }
 
 function endGame() {
-  clearInterval(intervalId);
+  clearTimeout(flashTimeoutId);
 
   bgMusic.pause();
   bgMusic.currentTime = 0;
@@ -121,14 +123,17 @@ function endGame() {
   gameOverModal.style.display = "block";
 
   startBtn.disabled = false;
-  activeTile?.classList.remove("active");
-  activeTile = null;
+
+  if (activeTile) {
+    activeTile.classList.remove("active");
+    activeTile = null;
+  }
 }
-  
 
 startBtn.addEventListener("click", startGame);
 restartBtn.addEventListener("click", () => {
   gameOverModal.style.display = "none";
   startGame();
 });
+
   
