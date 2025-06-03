@@ -81,7 +81,7 @@ function flashRandomTile() {
       activeTile = null;
       endGame();
     }
-  }, 1000); // 1 seconds
+  }, 1200); // 1 seconds
 }
 
 function handleTileClick(index) {
