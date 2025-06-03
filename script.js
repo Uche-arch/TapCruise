@@ -13,8 +13,9 @@ let tiles = [];
 let activeTile = null;
 let score = 0;
 let highScore = localStorage.getItem("tileTapHighScore") || 0;
+let lastTileIndex = -1;
 
-const INITIAL_SPEED = 1300; // (You can adjust or remove speed now)
+const INITIAL_SPEED = 1300;
 const MIN_SPEED = 100;
 let speed = INITIAL_SPEED;
 
@@ -54,13 +55,6 @@ function startGame() {
 
   flashRandomTile();
 
-  const randomIndex = Math.floor(Math.random() * bgSongs.length);
-  bgMusic.src = bgSongs[randomIndex];
-  bgMusic.load();
-  bgMusic.play().catch((err) => {
-    console.warn("Music autoplay blocked:", err);
-  });
-
   failSound.pause();
   failSound.currentTime = 0;
 }
@@ -71,7 +65,14 @@ function flashRandomTile() {
     return;
   }
 
-  const index = Math.floor(Math.random() * tiles.length);
+  let index;
+
+  // Keep picking until it's different from the last tile
+  do {
+    index = Math.floor(Math.random() * tiles.length);
+  } while (index === lastTileIndex && tiles.length > 1);
+
+  lastTileIndex = index;
   activeTile = tiles[index];
   activeTile.classList.add("active");
 
@@ -81,7 +82,7 @@ function flashRandomTile() {
       activeTile = null;
       endGame();
     }
-  }, 1200); // 1 seconds
+  }, 1200); // 1.2 seconds
 }
 
 function handleTileClick(index) {
@@ -117,6 +118,7 @@ function endGame() {
   bgMusic.pause();
   bgMusic.currentTime = 0;
 
+  failSound.volume = 0.2;
   failSound.play();
 
   finalScoreEl.textContent = score;
@@ -130,10 +132,23 @@ function endGame() {
   }
 }
 
-startBtn.addEventListener("click", startGame);
-restartBtn.addEventListener("click", () => {
-  gameOverModal.style.display = "none";
-  startGame();
+// 🎵 Fix: Attach music play directly to user interaction
+startBtn.addEventListener("click", () => {
+  // Setup background music
+  const randomIndex = Math.floor(Math.random() * bgSongs.length);
+  bgMusic.src = bgSongs[randomIndex];
+  bgMusic.load();
+  bgMusic.volume = 0.2;
+  bgMusic.muted = false;
+
+  bgMusic.play().catch((err) => {
+    console.warn("Music autoplay was blocked:", err);
+  });
+
+  startGame(); // Start game after music starts
 });
 
-  
+restartBtn.addEventListener("click", () => {
+  gameOverModal.style.display = "none";
+  // startGame(); // Optional if you want auto-restart
+});

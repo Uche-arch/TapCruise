@@ -37,8 +37,8 @@ h1 {
   display: flex;
   align-items: center;
   gap: 5px;
-  font-size: 1.2em;
-  padding: 8px 14px;
+  font-size: 1em;
+  padding: 6px 12px;
   border: none;
   border-radius: 20px;
   background-color: #333;
@@ -50,7 +50,7 @@ h1 {
 .emoji-btn:hover {
   background-color: #00ffc8;
   color: #000;
-  transform: scale(1.05);
+  transform: scale(1.01);
 }
 
 .emoji-btn.voted {
@@ -147,3 +147,35 @@ button:hover {
 #restartBtn:hover {
   background-color: #006f98;
 }
+
+/* Heartbeat Animation */
+@keyframes heartbeat {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.08);
+  }
+}
+
+#heartBtn {
+  animation: heartbeat 1.2s infinite;
+}
+
+/* Laugh Tilting Animation */
+@keyframes laughTilt {
+  0%, 100% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(10deg);
+  }
+  75% {
+    transform: rotate(-10deg);
+  }
+}
+
+#laughBtn {
+  animation: laughTilt 1.5s infinite;
+}
+
