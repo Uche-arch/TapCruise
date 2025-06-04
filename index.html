@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -15,27 +16,31 @@
       </div>
     </div>
 
+    <div id="pauseModal" class="modal">
+      <div class="modal-content">
+        <h2>Game Paused</h2>
+        <button id="continueBtn">Continue abeg😄</button>
+      </div>
+    </div>
+
     <div class="game-container">
-      <h1>Tap Cruise</h1>     
+      <h1>Tap Cruise</h1>
       <div class="scoreboard">
         <div>Score: <span id="score">0</span></div>
         <div>😎High Score: <span id="highScore">0</span></div>
       </div>
       <div class="grid" id="grid"></div>
       <button id="startBtn">Start Game</button>
-      <p class="note">Quick! Hit the flashing tile in 1 second!</p>
+      <button id="pauseBtn">Pause</button>
+      <p class="note">Quick! Hit the green tile!</p>
       <div id="emojiContainer">
         <button id="heartBtn" class="emoji-btn">❤️ <span id="heartCount">0</span></button>
         <button id="laughBtn" class="emoji-btn">😂 <span id="laughCount">0</span></button>
-      </div> 
+      </div>
     </div>
-    
+
     <audio id="bgMusic" preload="auto" loop></audio>
-    <audio
-      id="failSound"
-      src="./sounds/Adult-Laugh.mp3"
-      preload="auto"
-    ></audio>
+    <audio id="failSound" src="./sounds/Adult-Laugh.mp3" preload="auto"></audio>
     <script src="script.js"></script>
     <script src="reaction.js"></script>
   </body>

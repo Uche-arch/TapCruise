@@ -88,6 +88,9 @@ h1 {
 .tile.active {
   background-color: #00ffc8;
 }
+.tile.red {
+  background-color: red;
+}
 
 button {
   padding: 10px 20px;
