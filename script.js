@@ -3,6 +3,7 @@ const scoreEl = document.getElementById("score");
 const highScoreEl = document.getElementById("highScore");
 const startBtn = document.getElementById("startBtn");
 const pauseBtn = document.getElementById("pauseBtn");
+const musicBtn = document.getElementById("musicBtn");
 const gameOverModal = document.getElementById("gameOverModal");
 const pauseModal = document.getElementById("pauseModal");
 const finalScoreEl = document.getElementById("finalScore");
@@ -29,7 +30,12 @@ const bgSongs = [
   "./sounds/WITHYOU.mp3",
   "./sounds/Francis.mp3",
   "./sounds/fairy.mp3",
+  "./sounds/gata.mp3"
 ];
+
+let selectedSong = "";
+let musicStarted = false;
+let lastSongIndex = -1;
 
 highScoreEl.textContent = highScore;
 
@@ -61,7 +67,6 @@ function flashRandomTile() {
 
   const timeElapsed = Date.now() - gameStartTime;
 
-  // After 25 seconds, red tiles can appear
   if (timeElapsed >= 20000 && Math.random() < 0.4) {
     activeTile.classList.add("red");
     isRedTile = true;
@@ -70,13 +75,11 @@ function flashRandomTile() {
     isRedTile = false;
   }
 
-  // After 40 seconds, increase speed
   if (timeElapsed >= 40000) {
     speed = 450;
     clearInterval(flashInterval);
     flashInterval = setInterval(flashRandomTile, speed);
   }
-  // After 50 seconds, increase speed
   if (timeElapsed >= 59000) {
     speed = 280;
     clearInterval(flashInterval);
@@ -127,9 +130,6 @@ function startGame() {
 
   clearInterval(flashInterval);
   flashInterval = setInterval(flashRandomTile, speed);
-
-  bgMusic.volume = 0.2;
-  bgMusic.play().catch(() => {});
 }
 
 function endGame() {
@@ -139,19 +139,28 @@ function endGame() {
   bgMusic.currentTime = 0;
 
   failSound.volume = 0.2;
-  failSound.play();
+  failSound.pause();
+  failSound.currentTime = 0;
+  failSound.play().catch((e) => console.log("Fail sound error:", e));
+
+  // Stop the fail sound after 2 seconds (2000 ms)
+  setTimeout(() => {
+    failSound.pause();
+    failSound.currentTime = 0;
+  }, 2000);
 
   finalScoreEl.textContent = score;
   gameOverModal.style.display = "block";
   startBtn.disabled = false;
   pauseBtn.disabled = true;
+
+  musicStarted = false;
+  musicBtn.textContent = "🎵 Play Music";
+  musicBtn.disabled = false;
 }
 
+
 startBtn.addEventListener("click", () => {
-  const randomIndex = Math.floor(Math.random() * bgSongs.length);
-  bgMusic.src = bgSongs[randomIndex];
-  bgMusic.load();
-  bgMusic.play().catch(() => {});
   startGame();
 });
 
@@ -172,7 +181,37 @@ pauseBtn.addEventListener("click", () => {
 continueBtn.addEventListener("click", () => {
   paused = false;
   pauseModal.style.display = "none";
-  bgMusic.play().catch(() => {});
+  if (musicStarted) {
+    bgMusic.play().catch((e) => console.log("Resume music error:", e));
+  }
   flashInterval = setInterval(flashRandomTile, speed);
 });
 
+// 🎵 MUSIC BUTTON – with no repeat
+musicBtn.addEventListener("click", () => {
+  if (!musicStarted) {
+    let randomIndex;
+
+    do {
+      randomIndex = Math.floor(Math.random() * bgSongs.length);
+    } while (randomIndex === lastSongIndex && bgSongs.length > 1);
+
+    lastSongIndex = randomIndex;
+    selectedSong = bgSongs[randomIndex];
+
+    bgMusic.src = selectedSong;
+    bgMusic.loop = true;
+    bgMusic.volume = 0.2;
+
+    bgMusic
+      .play()
+      .then(() => {
+        musicStarted = true;
+        musicBtn.textContent = "🎵 Music Playing";
+        musicBtn.disabled = true;
+      })
+      .catch((e) => {
+        console.log("Music play error:", e);
+      });
+  }
+});
