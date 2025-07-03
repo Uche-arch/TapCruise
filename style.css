@@ -136,6 +136,12 @@ button:hover {
   color: black;
 }
 
+#musicBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  filter: grayscale(50%);
+}
+
 #restartBtn {
   padding: 10px 20px;
   background-color: #008cba;

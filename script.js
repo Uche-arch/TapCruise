@@ -189,6 +189,9 @@ continueBtn.addEventListener("click", () => {
 
 // 🎵 MUSIC BUTTON – with no repeat
 musicBtn.addEventListener("click", () => {
+  // Immediately disable the button on first click
+  musicBtn.disabled = true;
+  
   if (!musicStarted) {
     let randomIndex;
 
